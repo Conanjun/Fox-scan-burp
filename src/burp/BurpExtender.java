@@ -1,32 +1,39 @@
 package burp;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.PrintWriter;
+import java.net.URL;
 
 /**
  * Created by fengxuan on 17/1/21.
  */
-public class BurpExtender implements IBurpExtender, ITab {
+public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public PrintWriter stdout;
-    public IExtensionHelpers hps;
-    public IBurpExtenderCallbacks cbs;
+    public IExtensionHelpers helpers;
+    public IBurpExtenderCallbacks callbacks;
     public JTabbedPane jTabbedPane;
     public JPanel jPanelMain;
+    public ActionTools actionTools;
     private UIComponents uiComponents = new UIComponents();
 
 
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
-        callbacks.setExtensionName("BurpExtender");
+        callbacks.setExtensionName("FoxScan");
 
-        this.hps = callbacks.getHelpers();
+        this.helpers = callbacks.getHelpers();
 
-        this.cbs = callbacks;
+        this.callbacks = callbacks;
+
+        this.callbacks.registerHttpListener(this);
 
         this.stdout = new PrintWriter(callbacks.getStdout(), true);
 
-        this.stdout.println("hello burp");
+        actionTools = new ActionTools(helpers);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -35,15 +42,25 @@ public class BurpExtender implements IBurpExtender, ITab {
                 jPanelMain.setLayout(new BorderLayout(10, 10));
                 jPanelMain.setSize(1024, 768);
 
+                jTabbedPane = new JTabbedPane();
+
                 jPanelMain.add(uiComponents.TopPanel(), BorderLayout.NORTH);
 
                 jPanelMain.add(uiComponents.middlePanel(), BorderLayout.CENTER);
 
-//                jTabbedPane.scrollRectToVisible(new Rectangle(500, 70));
-//                jTabbedPane.addTab("Settings", jPanelMain);
+                uiComponents.btnSubmit.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String url = uiComponents.TextDomain.getText();
 
-                cbs.customizeUiComponent(jPanelMain);
-                cbs.addSuiteTab(BurpExtender.this);
+                        stdout.println(url);
+                    }
+                });
+
+                jTabbedPane .addTab("Settings", null, jPanelMain, null);
+
+//                cbs.customizeUiComponent(jPanelMain);
+                callbacks.addSuiteTab(BurpExtender.this);
             }
         });
     }
@@ -55,6 +72,15 @@ public class BurpExtender implements IBurpExtender, ITab {
 
     @Override
     public Component getUiComponent() {
-        return jPanelMain;
+        return jTabbedPane;
+    }
+
+
+    @Override
+    public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo) {
+
+        actionTools.RequestResponseInfo = messageInfo;
+
+        
     }
 }

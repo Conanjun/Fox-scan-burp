@@ -445,24 +445,24 @@ public class UIComponents extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify
-    private javax.swing.JButton btnSubmit;
-    private javax.swing.JButton btnReset;
-    private javax.swing.JCheckBox CheckBoxgetUsers;
-    private javax.swing.JCheckBox CheckBoxisDba;
-    private javax.swing.JCheckBox CheckBoxgetTables;
-    private javax.swing.JCheckBox CheckBoxgetColumns;
-    private javax.swing.JCheckBox CheckBoxgetDbs;
-    private javax.swing.JCheckBox CheckBoxdumpTable;
-    private javax.swing.JLabel LabelTitle;
-    private javax.swing.JLabel LabelDomain;
-    private javax.swing.JLabel LabelSaddr;
-    private javax.swing.JLabel Labelwhite;
-    private javax.swing.JLabel Labelblack;
-    private javax.swing.JLabel Labeloptions;
-    private javax.swing.JLabel Labeltalk;
-    private javax.swing.JTextField TextDomain;
-    private javax.swing.JTextField TextSqlAddr;
-    private javax.swing.JTextField TextWhiteList;
-    private javax.swing.JTextField TextBlackList;
+    public javax.swing.JButton btnSubmit;
+    public javax.swing.JButton btnReset;
+    public javax.swing.JCheckBox CheckBoxgetUsers;
+    public javax.swing.JCheckBox CheckBoxisDba;
+    public javax.swing.JCheckBox CheckBoxgetTables;
+    public javax.swing.JCheckBox CheckBoxgetColumns;
+    public javax.swing.JCheckBox CheckBoxgetDbs;
+    public javax.swing.JCheckBox CheckBoxdumpTable;
+    public javax.swing.JLabel LabelTitle;
+    public javax.swing.JLabel LabelDomain;
+    public javax.swing.JLabel LabelSaddr;
+    public javax.swing.JLabel Labelwhite;
+    public javax.swing.JLabel Labelblack;
+    public javax.swing.JLabel Labeloptions;
+    public javax.swing.JLabel Labeltalk;
+    public javax.swing.JTextField TextDomain;
+    public javax.swing.JTextField TextSqlAddr;
+    public javax.swing.JTextField TextWhiteList;
+    public javax.swing.JTextField TextBlackList;
     // End of variables declaration
 }
