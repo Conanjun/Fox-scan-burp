@@ -1,7 +1,7 @@
 package burp;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,12 +13,22 @@ import java.net.URL;
  */
 public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public PrintWriter stdout;
+    public String domain;
+    public String sqladdr;
+    public String whitelist;
+    public String blacklist;
+
+    public LinkedList queue;
+
     public IExtensionHelpers helpers;
     public IBurpExtenderCallbacks callbacks;
+
     public JTabbedPane jTabbedPane;
     public JPanel jPanelMain;
-    public ActionTools actionTools;
+
+    public RequestResponseInfo actionTools;
     private UIComponents uiComponents = new UIComponents();
+
 
 
     @Override
@@ -33,7 +43,6 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
 
         this.stdout = new PrintWriter(callbacks.getStdout(), true);
 
-        actionTools = new ActionTools(helpers);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -51,9 +60,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 uiComponents.btnSubmit.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String url = uiComponents.TextDomain.getText();
+                        domain = uiComponents.TextDomain.getText();
+                        sqladdr = uiComponents.TextSqlAddr.getText();
+                        whitelist = uiComponents.TextWhiteList.getText();
+                        blacklist = uiComponents.TextBlackList.getText();
 
-                        stdout.println(url);
                     }
                 });
 
@@ -79,8 +90,20 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     @Override
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo) {
 
-        actionTools.RequestResponseInfo = messageInfo;
+        actionTools = new RequestResponseInfo(helpers, messageInfo);
 
-        
+        URL url = actionTools.getUrl();
+        Map<String, String> map = new TreeMap<String, String>();
+//        if (url.toString().startsWith(domain)){
+
+            if (actionTools.getMethod().equals("POST")){
+                map.put(url.toString(), actionTools.getBody());
+            }else if (actionTools.getMethod().equals("GET")){
+                map.put(url.toString(), actionTools.getBody());
+            }
+        queue.add(map);
+//        }
+        stdout.println("queue: " + queue);
+
     }
 }
